@@ -10,7 +10,7 @@ func main() {
 	Loadenv()
 	InitOAuth()
 
-	if err := LoadApprovedUsers("../users.csv"); err != nil {
+	if err := LoadApprovedUsers("users.csv"); err != nil {
 		log.Fatalf("Failed to load approved users: %v", err)
 	}
 
@@ -22,7 +22,7 @@ func main() {
 	// Sync the database
 	SyncDB()
 
-	if err = PopulateUsersFromCSV(db,"../users.csv","123"); err!=nil{
+	if err = PopulateUsersFromCSV(db,"users.csv","123"); err!=nil{
 		log.Fatal("Failed to populate users from CSV")
 	}
 
