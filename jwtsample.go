@@ -41,7 +41,7 @@ func ConnectToDB() (*gorm.DB, error) {
 
 	// Create database if it doesn't exist
 	if !exists {
-		createDBSQL := `CREATE DATABASE x WITH OWNER postgres`
+		createDBSQL := `CREATE DATABASE x`
 		if err := DB.Exec(createDBSQL).Error; err != nil {
 			log.Println("Failed to create database:", err)
 			return nil, err
