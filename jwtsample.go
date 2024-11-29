@@ -65,9 +65,10 @@ func SyncDB() {
 func Loadenv() {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatal("Error loading .env file: ", err)
+		log.Println("WARNING: Error loading .env file: ", err)
+	}else{
+		log.Println(".env file loaded successfully")
 	}
-	log.Println(".env file loaded successfully")
 }
 
 func InitOAuth() {
