@@ -130,12 +130,13 @@ a[x-apple-data-detectors],
                         <table cellpadding="0" cellspacing="0" width="100%" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
                           <tr>
                             <td align="center" style="padding:0;Margin:0">
-                              <h1 class="es-m-txt-c" style="Margin:0;font-family:Changa, sans-serif;mso-line-height-rule:exactly;letter-spacing:0;font-size:55px;font-style:normal;font-weight:bold;line-height:55px;color:#E33650">Pick any three&nbsp;</h1>
+                              <h1 class="es-m-txt-c" style="Margin:0;font-family:Changa, sans-serif;mso-line-height-rule:exactly;letter-spacing:0;font-size:55px;font-style:normal;font-weight:bold;line-height:55px;color:#E33650">Pick only one&nbsp;</h1>
                             </td>
                           </tr>
                           <tr>
                             <td align="center" style="padding:0;Margin:0">
                               <h2 class="es-m-txt-c" style="Margin:0;font-family:Changa, sans-serif;mso-line-height-rule:exactly;letter-spacing:0;font-size:35px;font-style:normal;font-weight:bold;line-height:38.5px;color:#E33650">Who might be your secret santa?</h2>
+                              <p class="es-m-txt-chat" style="Margin:0;font-family:Changa, sans-serif;mso-line-height-rule:exactly;letter-spacing:0;font-size:25px;font-style:normal;font-weight:bold;line-height:38.5px;color:#374769">You can submit only once!</p>
                             </td>
                           </tr>
                           <tr>
@@ -158,12 +159,13 @@ a[x-apple-data-detectors],
                             
                             <!-- Selected Names -->
                             <tr>
-                                <td align="center" style="padding:0;Margin:0;padding-top:20px">
-                                    <div id="selectedNames" class="flex gap-2">
-                                        <!-- Selected names will be shown here -->
-                                    </div>
-                                </td>
-                            </tr>
+                              <td align="center" style="padding:0;Margin:0;padding-top:20px;display:flex;justify-content:center;">
+                                  <div id="selectedNames" class="flex gap-2">
+                                      <!-- Selected names will be shown here -->
+                                  </div>
+                              </td>
+                          </tr>
+                          
                             <tr>
                               <td align="center" style="padding:0;Margin:0;padding-top:30px">
                                 <button id="you-sure" class="es-button" style="background:#E7A31F;border-radius:30px;font-family:Arial, sans-serif;font-weight:bold;font-size:14px;padding:14px 35px 14px 35px;color:#FFFFFF;text-decoration:none;border:none">
@@ -218,7 +220,7 @@ function displayNames() {
 
 // Function to select a name
 function selectName(name) {
-  if (selectedNames.length < 3 && !selectedNames.includes(name)) {
+  if (selectedNames.length < 1 && !selectedNames.includes(name)) {
     selectedNames.push(name);
     updateSelectedNames();
     displayNames(); // Re-filter the list after selection
@@ -264,10 +266,9 @@ nameSearch.addEventListener('blur', () => {
 // Event listener for name search
 nameSearch.addEventListener('input', displayNames);
 
-// Function to submit selected names to the Go server for CSV generation
 function submitNamesToCSV() {
   // Format the selected names in the desired format
-  const formattedNames = selectedNames.map(name => `{{.UserName}} -> '${name}'`);
+  const formattedNames = selectedNames.map(name => `{{.UserName}} -> '${name}',{{.SantaEmail}}`);
 
   // Send the formatted names to the server for CSV generation
   fetch('/submit-names', {
@@ -277,14 +278,28 @@ function submitNamesToCSV() {
     },
     body: JSON.stringify({ names: formattedNames })
   })
-  .then(response => response.json())
-  .then(data => {
-    alert('Your responses has been saved!');
-  })
-  .catch(error => {
-    console.error('Error:', error);
-    alert('Failed to save names.');
-  });
+    .then(response => {
+      if (response.status === 409) {
+        return response.json().then(data => {
+          throw new Error(data.message); // Handle conflict case
+        });
+      }
+      if (!response.ok) {
+        throw new Error('Failed to save names.');
+      }
+      return response.json();
+    })
+    .then(data => {
+      alert('Your responses have been saved!');
+    })
+    .catch(error => {
+      if (error.message === 'You have already guessed!') {
+        alert('You have already guessed!');
+      } else {
+        console.error('Error:', error);
+        alert(error.message);
+      }
+    });
 }
 
 // Initialize the name list
