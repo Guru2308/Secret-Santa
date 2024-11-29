@@ -338,13 +338,12 @@ func fetchNamesFromCSV(filePath, currentUserEmail string) ([]string, error) {
 }
 
 // Function to get paired user details (email) based on role
-// Function to get paired user details (email) based on role
 func getPairedUserEmail(currentUserID uint, role string) (string, error) {
 	var connection UserConnection
 	var pairedUser RegisteredUser
 
-	// Fetch the user's connection (based on SantaID or ChildID)
-	err := DB.First(&connection, "santa_id = ? OR child_id = ?", currentUserID, currentUserID).Error
+	// Fetch the user's connections
+	err := DB.First(&connection, "user_id = ?", currentUserID).Error
 	if err != nil {
 		return "", fmt.Errorf("no connections found for user with ID %d: %v", currentUserID, err)
 	}
@@ -352,9 +351,9 @@ func getPairedUserEmail(currentUserID uint, role string) (string, error) {
 	var pairedUserID uint
 	// Determine paired user based on the role ("santa" or "child")
 	if role == "santa" {
-		pairedUserID = connection.ChildID  // The child is paired with the santa
+		pairedUserID = connection.SantaID
 	} else if role == "child" {
-		pairedUserID = connection.SantaID  // The santa is paired with the child
+		pairedUserID = connection.ChildID
 	} else {
 		return "", fmt.Errorf("invalid role: %s. Use 'santa' or 'child'", role)
 	}
@@ -368,6 +367,7 @@ func getPairedUserEmail(currentUserID uint, role string) (string, error) {
 	// Return the paired user's email
 	return pairedUser.Email, nil
 }
+
 func PopulateUsersFromCSV(db *gorm.DB, csvPath, defaultPassword string) error {
 	// Open the CSV file
 	file, err := os.Open(csvPath)
