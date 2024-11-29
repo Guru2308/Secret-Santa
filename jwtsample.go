@@ -31,26 +31,6 @@ func ConnectToDB() (*gorm.DB, error) {
 		log.Println("DB connected successfully")
 	}
 
-	// Check if the database exists before trying to create it
-	createDBSQL := `SELECT 1 FROM pg_database WHERE datname = 'x'`
-	var exists bool
-	if err := DB.Raw(createDBSQL).Scan(&exists).Error; err != nil {
-		log.Println("Error checking if database exists:", err)
-		return nil, err
-	}
-
-	// Create database if it doesn't exist
-	if !exists {
-		createDBSQL := `CREATE DATABASE x`
-		if err := DB.Exec(createDBSQL).Error; err != nil {
-			log.Println("Failed to create database:", err)
-			return nil, err
-		}
-		log.Println("Database 'x' created successfully.")
-	} else {
-		log.Println("Database 'x' already exists.")
-	}
-
 	return DB, nil
 }
 
@@ -121,14 +101,14 @@ func GoogleCallback(w http.ResponseWriter, r *http.Request) {
 
 	email, ok := userInfo["email"].(string)
 	if !ok || !strings.HasSuffix(email, "@qburst.com") {
-		renderUnauthorizedPage(w, "Unauthorized email: Use QBurst Mail ID")
+		http.Redirect(w, r, "static/error.html?message=Use+only+QB+Email", http.StatusSeeOther)
 		return
 	}
 
 	// Check if the email is in the approved list
 	if !approvedUsers[email] {
 		log.Printf("Email not in approved list: %s", email)
-		renderUnauthorizedPage(w, "Your email is not in the approved list. Please contact the administrator.")
+		http.Redirect(w, r, "static/error.html?message=You+have+not+registered+for+the+game", http.StatusSeeOther)
 		return
 	}
 

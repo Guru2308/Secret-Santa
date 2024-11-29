@@ -158,7 +158,7 @@ func HandleIndex(w http.ResponseWriter, r *http.Request) {
 	santaEmail, err := getPairedUserEmail(user.ID, "santa")
 	if err != nil {
 		log.Printf("Error getting Santa's email: %v", err)
-		renderUnauthorizedPage(w, "Unauthorized email: Did you register?")
+		http.Redirect(w, r, "static/error.html?message=Error+fetching+Santa+email", http.StatusSeeOther)
 		return
 	}
 
@@ -166,7 +166,7 @@ func HandleIndex(w http.ResponseWriter, r *http.Request) {
 	childEmail, err := getPairedUserEmail(user.ID, "child")
 	if err != nil {
 		log.Printf("Error getting Child's email: %v", err)
-		http.Redirect(w, r, "static/error.html?message=Error+fetching+child+email", http.StatusSeeOther)
+		http.Redirect(w, r, "static/error.html?message=Error+fetching+Recepient+email", http.StatusSeeOther)
 		return
 	}
 
