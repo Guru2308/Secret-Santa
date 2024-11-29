@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Secret Santa Login</title>
+    <link rel="icon" type="image/x-icon" href="https://img.freepik.com/premium-vector/trendy-cool-friendly-modern-hippie-smart-santa-claus-emoji-emoticon-illustration-vector-art_985204-1395.jpg">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        /* Container for Christmas lights and bulbs */
+        .top-banner {
+            width: 100%;
+            height: 100px;
+            background-image: url('https://example.com/your-christmas-lights-image.jpg'); /* Replace with your lights image */
+            background-size: cover;
+            background-position: center;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .top-banner img {
+            max-height: 80px; /* Adjust size as needed */
+        }
+
+        .login-container {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-top: 20px; /* Space below the top-banner */
+        }
+
+        .login-card {
+            width: 22rem;
+        }
+
+        .santa-image {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .left-side {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .right-side {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <style>
+        .login-container {
+            height: 80vh; /* Adjust to desired percentage */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-top: 0; /* Remove padding if any */
+            margin-top: -100px; /* Adjust upward movement */
+        }
+    
+        .login-card {
+            width: 30rem; /* Increased width */
+        }
+
+        .btn-danger:hover {
+            background-color: #ffd700; /* Deep gold on hover */
+            color: white;
+        }
+
+        .form-control:focus {
+            border-color: gold;
+            box-shadow: 0 0 10px gold;
+            outline: none;
+        }
+    </style>
+    
+    <!-- Christmas Lights and Bulbs at the Top -->
+    <div class="top-banner">
+        <!-- If you have separate images for bulbs and lights, you can place them here like so -->
+        <!-- <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFLUJak5YBU5s3IyFcOrr6Z6hGhH120A6ZBg&s" alt="Christmas Bulbs"> -->
+        <img src="https://png.pngtree.com/png-clipart/20211202/ourmid/pngtree-christmas-luminous-effect-lamp-string-png-image_4048227.png" alt="Christmas Lights">
+        <img src="https://png.pngtree.com/png-clipart/20211202/ourmid/pngtree-christmas-luminous-effect-lamp-string-png-image_4048227.png" alt="Christmas Lights">
+        <img src="https://png.pngtree.com/png-clipart/20211202/ourmid/pngtree-christmas-luminous-effect-lamp-string-png-image_4048227.png" alt="Christmas Lights">
+    </div>
+
+    <!-- Wishes pic  -->
+<div class="text-center mb-4">
+    <img src="https://cdn.pixabay.com/photo/2015/12/11/04/15/christmas-greeting-1087592_1280.png" 
+         alt="Wishes Image" 
+         class="img-fluid" 
+         style="max-width: 300px; height: auto;"> <!-- Adjusted size -->
+</div>
+
+    <div class="container-fluid login-container">
+        <div class="row w-100">
+            <!-- Left Side (Santa Image) -->
+            <div class="col-6 left-side">
+                <img src="https://media.istockphoto.com/id/1357890877/vector/cute-dancing-santa-claus-christmas-vector-illustration.jpg?s=612x612&w=0&k=20&c=dLLi6isaG0Qaf_8xGVVE9ishEuk5kWKWwgjxBRgj6fw=" alt="Santa Image" class="santa-image">
+            </div>
+
+            <!-- Right Side (Login Form) -->
+            <div class="col-6 right-side">
+                <div class="card shadow-lg p-4 login-card">
+                    <h3 class="card-title text-center mb-4" style="background: linear-gradient(to right, red, black); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                    Use your QB email
+                    </h3>                    
+                    <!-- Form element -->
+                    
+               
+<form action="/oauth" method="post">
+  <button class="gsi-material-button">
+    <div class="gsi-material-button-state"></div>
+    <div class="gsi-material-button-content-wrapper">
+      <div class="gsi-material-button-icon">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" xmlns:xlink="http://www.w3.org/1999/xlink" style="display: block;">
+          <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path>
+          <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"></path>
+          <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"></path>
+          <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"></path>
+          <path fill="none" d="M0 0h48v48H0z"></path>
+        </svg>
+      </div>
+      <span class="gsi-material-button-contents">Continue with Google</span>
+    </div>
+  </button>
+</form>
+
+<style>
+  .gsi-material-button {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -webkit-appearance: none;
+    background-color: #f2f2f2;
+    background-image: none;
+    border: none;
+    -webkit-border-radius: 20px;
+    border-radius: 20px;
+    box-sizing: border-box;
+    color: #1f1f1f;
+    cursor: pointer;
+    font-family: 'Roboto', arial, sans-serif;
+    font-size: 14px;
+    height: 40px;
+    letter-spacing: 0.25px;
+    outline: none;
+    padding: 0 12px;
+    position: relative;
+    text-align: center;
+    transition: background-color .218s, border-color .218s, box-shadow .218s;
+    vertical-align: middle;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  .gsi-material-button .gsi-material-button-icon {
+    height: 20px;
+    margin-right: 12px;
+    width: 20px;
+  }
+
+  .gsi-material-button .gsi-material-button-content-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    width: 100%;
+  }
+
+  .gsi-material-button .gsi-material-button-contents {
+    flex-grow: 1;
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .gsi-material-button .gsi-material-button-state {
+    transition: opacity .218s;
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+
+  .gsi-material-button:disabled {
+    cursor: default;
+    background-color: #ffffff61;
+  }
+
+  .gsi-material-button:disabled .gsi-material-button-state {
+    background-color: #1f1f1f1f;
+  }
+
+  .gsi-material-button:disabled .gsi-material-button-contents {
+    opacity: 38%;
+  }
+
+  .gsi-material-button:disabled .gsi-material-button-icon {
+    opacity: 38%;
+  }
+
+  .gsi-material-button:not(:disabled):active .gsi-material-button-state, 
+  .gsi-material-button:not(:disabled):focus .gsi-material-button-state {
+    background-color: #001d35;
+    opacity: 12%;
+  }
+
+  .gsi-material-button:not(:disabled):hover {
+    box-shadow: 0 1px 2px 0 rgba(60, 64, 67, .30), 0 1px 3px 1px rgba(60, 64, 67, .15);
+  }
+
+  .gsi-material-button:not(:disabled):hover .gsi-material-button-state {
+    background-color: #001d35;
+    opacity: 8%;
+  }
+
+  /* Responsive Styles */
+  @media (max-width: 600px) {
+    .gsi-material-button {
+      font-size: 12px;
+      padding: 0 10px;
+      height: 35px;
+    }
+
+    .gsi-material-button .gsi-material-button-icon {
+      height: 18px;
+      width: 18px;
+      margin-right: 8px;
+    }
+
+    .gsi-material-button .gsi-material-button-contents {
+      font-size: 13px;
+    }
+  }
+
+  @media (max-width: 400px) {
+    .gsi-material-button {
+      font-size: 11px;
+      padding: 0 8px;
+      height: 30px;
+    }
+
+    .gsi-material-button .gsi-material-button-icon {
+      height: 16px;
+      width: 16px;
+      margin-right: 6px;
+    }
+
+    .gsi-material-button .gsi-material-button-contents {
+      font-size: 12px;
+    }
+  }
+</style>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>
