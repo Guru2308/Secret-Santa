@@ -10,7 +10,7 @@ import (
 )
 
 // Global variable to hold approved users
-var approvedUsers map[string]bool
+var approvedUsers map[string]struct{}
 
 func LoadApprovedUsers(filePath string) error {
 	file, err := os.Open(filePath)
@@ -25,17 +25,19 @@ func LoadApprovedUsers(filePath string) error {
 		return err
 	}
 
-	approvedUsers = make(map[string]bool)
-	for _, record := range records {
+	approvedUsers = make(map[string]struct{})
+	for i, record := range records {
+		if i == 0 {
+			continue
+		}
 		if len(record) > 0 {
-			approvedUsers[record[0]] = true
+			approvedUsers[record[0]] = struct{}{}
 		}
 	}
 
 	log.Println("Approved users loaded successfully")
 	return nil
 }
-
 
 func submitNamesHandler(w http.ResponseWriter, r *http.Request) {
 	var req NamesRequest

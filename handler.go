@@ -81,7 +81,7 @@ func HandleLogout(w http.ResponseWriter, r *http.Request) {
 		Name:     "user_email",
 		Value:    "",
 		Path:     "/",
-		MaxAge: -1,
+		MaxAge:   -1,
 		HttpOnly: true,
 		SameSite: http.SameSiteLaxMode,
 	})
@@ -212,14 +212,14 @@ func serveIndex(w http.ResponseWriter, userName, santaEmail, childEmail, errorMe
 	}
 
 	data := struct {
-		UserName    string
-		SantaEmail  string
-		ChildEmail  string
+		UserName     string
+		SantaEmail   string
+		ChildEmail   string
 		ErrorMessage string
 	}{
-		UserName:    userName,
-		SantaEmail:  santaEmail,
-		ChildEmail:  childEmail,
+		UserName:     userName,
+		SantaEmail:   santaEmail,
+		ChildEmail:   childEmail,
 		ErrorMessage: errorMessage,
 	}
 
@@ -259,7 +259,7 @@ func HandleGuess(w http.ResponseWriter, r *http.Request) {
 	userName = capitalizeWordsImproved(userName)
 
 	// Fetch names from CSV file, excluding the current user's email
-	names, err := fetchNamesFromCSV("../users.csv", user.Email)
+	names, err := fetchNamesFromCSV("users.csv", user.Email)
 	if err != nil {
 		log.Printf("Error fetching names from CSV: %v", err)
 		http.Error(w, "Error fetching names", http.StatusInternalServerError)
@@ -285,7 +285,7 @@ func HandleGuess(w http.ResponseWriter, r *http.Request) {
 		UserName:   userName,
 		SantaEmail: santaEmail,
 		ChildEmail: childEmail,
-		NamesJSON:  func() string {
+		NamesJSON: func() string {
 			jsonData, _ := json.Marshal(names)
 			return string(jsonData)
 		}(),
@@ -300,27 +300,11 @@ func HandleGuess(w http.ResponseWriter, r *http.Request) {
 }
 
 func fetchNamesFromCSV(filePath, currentUserEmail string) ([]string, error) {
-	file, err := os.Open(filePath)
-	if err != nil {
-		return nil, err
-	}
-	defer file.Close()
-
-	reader := csv.NewReader(file)
-	records, err := reader.ReadAll()
-	if err != nil {
-		return nil, err
-	}
-
 	var names []string
-	for i, record := range records {
-		// Skip the first row (header)
-		if i == 0 {
-			continue
-		}
+	for record := range approvedUsers {
 
 		//emails are in the first column
-		email := record[0]
+		email := record
 
 		// Skip the current user's email
 		if email == currentUserEmail {

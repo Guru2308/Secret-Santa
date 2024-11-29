@@ -46,7 +46,7 @@ func Loadenv() {
 	err := godotenv.Load()
 	if err != nil {
 		log.Println("WARNING: Error loading .env file: ", err)
-	}else{
+	} else {
 		log.Println(".env file loaded successfully")
 	}
 }
@@ -106,7 +106,7 @@ func GoogleCallback(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Check if the email is in the approved list
-	if !approvedUsers[email] {
+	if _, ok := approvedUsers[email]; !ok {
 		log.Printf("Email not in approved list: %s", email)
 		http.Redirect(w, r, "static/error.html?message=You+have+not+registered+for+the+game", http.StatusSeeOther)
 		return
