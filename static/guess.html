@@ -262,7 +262,7 @@ nameSearch.addEventListener('input', displayNames);
 
 function submitNamesToCSV() {
   // Format the selected names in the desired format
-  const formattedNames = [`{{.UserName}}`, selectedNames,`{{.SantaEmail}}`];
+  const formattedNames = [`{{.UserName}}`, selectedNames,`{{.SantaName}}`];
 
   // Send the formatted names to the server for CSV generation
   fetch('/submit-names', {

@@ -254,6 +254,11 @@ func HandleGuess(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Extract the user's name from their email
+	santaName := strings.Split(santaEmail, "@")[0]      // Extract the part before @
+	santaName = strings.ReplaceAll(santaName, ".", " ") // Replace '.' with space
+	santaName = capitalizeWordsImproved(santaName)
+
+	// Extract the user's name from their email
 	userName := strings.Split(user.Email, "@")[0]     // Extract the part before @
 	userName = strings.ReplaceAll(userName, ".", " ") // Replace '.' with space
 	userName = capitalizeWordsImproved(userName)
@@ -278,12 +283,14 @@ func HandleGuess(w http.ResponseWriter, r *http.Request) {
 		User       RegisteredUser
 		UserName   string
 		SantaEmail string
+		SantaName  string
 		ChildEmail string
 		NamesJSON  string
 	}{
 		User:       user,
 		UserName:   userName,
 		SantaEmail: santaEmail,
+		SantaName:  santaName,
 		ChildEmail: childEmail,
 		NamesJSON: func() string {
 			jsonData, _ := json.Marshal(names)
