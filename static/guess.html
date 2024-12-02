@@ -1,357 +1,738 @@
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
- <head>
+
+<head>
   <meta charset="UTF-8">
   <meta content="width=device-width, initial-scale=1" name="viewport">
   <meta name="x-apple-disable-message-reformatting">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta content="telephone=no" name="format-detection">
   <title>Secret Santa</title>
-  <link rel="icon" type="image/x-icon" href="https://img.freepik.com/premium-vector/trendy-cool-friendly-modern-hippie-smart-santa-claus-emoji-emoticon-illustration-vector-art_985204-1395.jpg">
+  <link rel="icon" type="image/x-icon"
+    href="https://img.freepik.com/premium-vector/trendy-cool-friendly-modern-hippie-smart-santa-claus-emoji-emoticon-illustration-vector-art_985204-1395.jpg">
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 
-  <link href="https://fonts.googleapis.com/css2?family=Changa:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet"><!--<![endif]-->
+  <link href="https://fonts.googleapis.com/css2?family=Changa:wght@200;300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&display=swap"
+    rel="stylesheet"><!--<![endif]-->
   <style type="text/css">
-.rollover:hover .rollover-first {
-  max-height:0px!important;
-  display:none!important;
-}
-.rollover:hover .rollover-second {
-  max-height:none!important;
-  display:block!important;
-}
-.rollover span {
-  font-size:0px;
-}
-u + .body img ~ div div {
-  display:none;
-}
-#outlook a {
-  padding:0;
-}
-span.MsoHyperlink,
-span.MsoHyperlinkFollowed {
-  color:inherit;
-  mso-style-priority:99;
-}
-a.es-button {
-  mso-style-priority:100!important;
-  text-decoration:none!important;
-}
-a[x-apple-data-detectors],
-#MessageViewBody a {
-  color:inherit!important;
-  text-decoration:none!important;
-  font-size:inherit!important;
-  font-family:inherit!important;
-  font-weight:inherit!important;
-  line-height:inherit!important;
-}
-.es-desk-hidden {
-  display:none;
-  float:left;
-  overflow:hidden;
-  width:0;
-  max-height:0;
-  line-height:0;
-  mso-hide:all;
-}
-@media only screen and (max-width:600px) {.es-p-default { } *[class="gmail-fix"] { display:none!important } p, a { line-height:150%!important } h1, h1 a { line-height:120%!important } h2, h2 a { line-height:120%!important } h3, h3 a { line-height:120%!important } h4, h4 a { line-height:120%!important } h5, h5 a { line-height:120%!important } h6, h6 a { line-height:120%!important } .es-header-body p { } .es-content-body p { } .es-footer-body p { } .es-infoblock p { } h1 { font-size:40px!important; text-align:left } h2 { font-size:28px!important; text-align:left } h3 { font-size:18px!important; text-align:left } h4 { font-size:24px!important; text-align:left } h5 { font-size:20px!important; text-align:left } h6 { font-size:16px!important; text-align:left } .es-header-body h1 a, .es-content-body h1 a, .es-footer-body h1 a { font-size:40px!important } .es-header-body h2 a, .es-content-body h2 a, .es-footer-body h2 a { font-size:28px!important } .es-header-body h3 a, .es-content-body h3 a, .es-footer-body h3 a { font-size:18px!important } .es-header-body h4 a, .es-content-body h4 a, .es-footer-body h4 a { font-size:24px!important } .es-header-body h5 a, .es-content-body h5 a, .es-footer-body h5 a { font-size:20px!important } .es-header-body h6 a, .es-content-body h6 a, .es-footer-body h6 a { font-size:16px!important } .es-menu td a { font-size:14px!important } .es-header-body p, .es-header-body a { font-size:14px!important } .es-content-body p, .es-content-body a { font-size:14px!important } .es-footer-body p, .es-footer-body a { font-size:12px!important } .es-infoblock p, .es-infoblock a { font-size:12px!important } .es-m-txt-c, .es-m-txt-c h1, .es-m-txt-c h2, .es-m-txt-c h3, .es-m-txt-c h4, .es-m-txt-c h5, .es-m-txt-c h6 { text-align:center!important } .es-m-txt-r, .es-m-txt-r h1, .es-m-txt-r h2, .es-m-txt-r h3, .es-m-txt-r h4, .es-m-txt-r h5, .es-m-txt-r h6 { text-align:right!important } .es-m-txt-j, .es-m-txt-j h1, .es-m-txt-j h2, .es-m-txt-j h3, .es-m-txt-j h4, .es-m-txt-j h5, .es-m-txt-j h6 { text-align:justify!important } .es-m-txt-l, .es-m-txt-l h1, .es-m-txt-l h2, .es-m-txt-l h3, .es-m-txt-l h4, .es-m-txt-l h5, .es-m-txt-l h6 { text-align:left!important } .es-m-txt-r img, .es-m-txt-c img, .es-m-txt-l img { display:inline!important } .es-m-txt-r .rollover:hover .rollover-second, .es-m-txt-c .rollover:hover .rollover-second, .es-m-txt-l .rollover:hover .rollover-second { display:inline!important } .es-m-txt-r .rollover span, .es-m-txt-c .rollover span, .es-m-txt-l .rollover span { line-height:0!important; font-size:0!important; display:block } .es-spacer { display:inline-table } a.es-button, button.es-button { font-size:14px!important; padding:10px 20px 10px 20px!important; line-height:120%!important } a.es-button, button.es-button, .es-button-border { display:inline-block!important } .es-m-fw, .es-m-fw.es-fw, .es-m-fw .es-button { display:block!important } .es-m-il, .es-m-il .es-button, .es-social, .es-social td, .es-menu { display:inline-block!important } .es-adaptive table, .es-left, .es-right { width:100%!important } .es-content table, .es-header table, .es-footer table, .es-content, .es-footer, .es-header { width:100%!important; max-width:600px!important } .adapt-img { width:100%!important; height:auto!important } .es-mobile-hidden, .es-hidden { display:none!important } .es-desk-hidden { width:auto!important; overflow:visible!important; float:none!important; max-height:inherit!important; line-height:inherit!important } tr.es-desk-hidden { display:table-row!important } table.es-desk-hidden { display:table!important } td.es-desk-menu-hidden { display:table-cell!important } .es-menu td { width:1%!important } table.es-table-not-adapt, .esd-block-html table { width:auto!important } .h-auto { height:auto!important } }
-@media screen and (max-width:384px) {.mail-message-content { width:414px!important } }
-</style>
- </head>
- <body class="body" style="width:100vw;height:100vh;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;padding:0;Margin:0">
+    .rollover:hover .rollover-first {
+      max-height: 0px !important;
+      display: none !important;
+    }
+
+    .rollover:hover .rollover-second {
+      max-height: none !important;
+      display: block !important;
+    }
+
+    .rollover span {
+      font-size: 0px;
+    }
+
+    u+.body img~div div {
+      display: none;
+    }
+
+    #outlook a {
+      padding: 0;
+    }
+
+    span.MsoHyperlink,
+    span.MsoHyperlinkFollowed {
+      color: inherit;
+      mso-style-priority: 99;
+    }
+
+    a.es-button {
+      mso-style-priority: 100 !important;
+      text-decoration: none !important;
+    }
+
+    a[x-apple-data-detectors],
+    #MessageViewBody a {
+      color: inherit !important;
+      text-decoration: none !important;
+      font-size: inherit !important;
+      font-family: inherit !important;
+      font-weight: inherit !important;
+      line-height: inherit !important;
+    }
+
+    .es-desk-hidden {
+      display: none;
+      float: left;
+      overflow: hidden;
+      width: 0;
+      max-height: 0;
+      line-height: 0;
+      mso-hide: all;
+    }
+
+    @media only screen and (max-width:600px) {
+      .es-p-default {}
+
+      *[class="gmail-fix"] {
+        display: none !important
+      }
+
+      p,
+      a {
+        line-height: 150% !important
+      }
+
+      h1,
+      h1 a {
+        line-height: 120% !important
+      }
+
+      h2,
+      h2 a {
+        line-height: 120% !important
+      }
+
+      h3,
+      h3 a {
+        line-height: 120% !important
+      }
+
+      h4,
+      h4 a {
+        line-height: 120% !important
+      }
+
+      h5,
+      h5 a {
+        line-height: 120% !important
+      }
+
+      h6,
+      h6 a {
+        line-height: 120% !important
+      }
+
+      .es-header-body p {}
+
+      .es-content-body p {}
+
+      .es-footer-body p {}
+
+      .es-infoblock p {}
+
+      h1 {
+        font-size: 40px !important;
+        text-align: left
+      }
+
+      h2 {
+        font-size: 28px !important;
+        text-align: left
+      }
+
+      h3 {
+        font-size: 18px !important;
+        text-align: left
+      }
+
+      h4 {
+        font-size: 24px !important;
+        text-align: left
+      }
+
+      h5 {
+        font-size: 20px !important;
+        text-align: left
+      }
+
+      h6 {
+        font-size: 16px !important;
+        text-align: left
+      }
+
+      .es-header-body h1 a,
+      .es-content-body h1 a,
+      .es-footer-body h1 a {
+        font-size: 40px !important
+      }
+
+      .es-header-body h2 a,
+      .es-content-body h2 a,
+      .es-footer-body h2 a {
+        font-size: 28px !important
+      }
+
+      .es-header-body h3 a,
+      .es-content-body h3 a,
+      .es-footer-body h3 a {
+        font-size: 18px !important
+      }
+
+      .es-header-body h4 a,
+      .es-content-body h4 a,
+      .es-footer-body h4 a {
+        font-size: 24px !important
+      }
+
+      .es-header-body h5 a,
+      .es-content-body h5 a,
+      .es-footer-body h5 a {
+        font-size: 20px !important
+      }
+
+      .es-header-body h6 a,
+      .es-content-body h6 a,
+      .es-footer-body h6 a {
+        font-size: 16px !important
+      }
+
+      .es-menu td a {
+        font-size: 14px !important
+      }
+
+      .es-header-body p,
+      .es-header-body a {
+        font-size: 14px !important
+      }
+
+      .es-content-body p,
+      .es-content-body a {
+        font-size: 14px !important
+      }
+
+      .es-footer-body p,
+      .es-footer-body a {
+        font-size: 12px !important
+      }
+
+      .es-infoblock p,
+      .es-infoblock a {
+        font-size: 12px !important
+      }
+
+      .es-m-txt-c,
+      .es-m-txt-c h1,
+      .es-m-txt-c h2,
+      .es-m-txt-c h3,
+      .es-m-txt-c h4,
+      .es-m-txt-c h5,
+      .es-m-txt-c h6 {
+        text-align: center !important
+      }
+
+      .es-m-txt-r,
+      .es-m-txt-r h1,
+      .es-m-txt-r h2,
+      .es-m-txt-r h3,
+      .es-m-txt-r h4,
+      .es-m-txt-r h5,
+      .es-m-txt-r h6 {
+        text-align: right !important
+      }
+
+      .es-m-txt-j,
+      .es-m-txt-j h1,
+      .es-m-txt-j h2,
+      .es-m-txt-j h3,
+      .es-m-txt-j h4,
+      .es-m-txt-j h5,
+      .es-m-txt-j h6 {
+        text-align: justify !important
+      }
+
+      .es-m-txt-l,
+      .es-m-txt-l h1,
+      .es-m-txt-l h2,
+      .es-m-txt-l h3,
+      .es-m-txt-l h4,
+      .es-m-txt-l h5,
+      .es-m-txt-l h6 {
+        text-align: left !important
+      }
+
+      .es-m-txt-r img,
+      .es-m-txt-c img,
+      .es-m-txt-l img {
+        display: inline !important
+      }
+
+      .es-m-txt-r .rollover:hover .rollover-second,
+      .es-m-txt-c .rollover:hover .rollover-second,
+      .es-m-txt-l .rollover:hover .rollover-second {
+        display: inline !important
+      }
+
+      .es-m-txt-r .rollover span,
+      .es-m-txt-c .rollover span,
+      .es-m-txt-l .rollover span {
+        line-height: 0 !important;
+        font-size: 0 !important;
+        display: block
+      }
+
+      .es-spacer {
+        display: inline-table
+      }
+
+      a.es-button,
+      button.es-button {
+        font-size: 14px !important;
+        padding: 10px 20px 10px 20px !important;
+        line-height: 120% !important
+      }
+
+      a.es-button,
+      button.es-button,
+      .es-button-border {
+        display: inline-block !important
+      }
+
+      .es-m-fw,
+      .es-m-fw.es-fw,
+      .es-m-fw .es-button {
+        display: block !important
+      }
+
+      .es-m-il,
+      .es-m-il .es-button,
+      .es-social,
+      .es-social td,
+      .es-menu {
+        display: inline-block !important
+      }
+
+      .es-adaptive table,
+      .es-left,
+      .es-right {
+        width: 100% !important
+      }
+
+      .es-content table,
+      .es-header table,
+      .es-footer table,
+      .es-content,
+      .es-footer,
+      .es-header {
+        width: 100% !important;
+        max-width: 600px !important
+      }
+
+      .adapt-img {
+        width: 100% !important;
+        height: auto !important
+      }
+
+      .es-mobile-hidden,
+      .es-hidden {
+        display: none !important
+      }
+
+      .es-desk-hidden {
+        width: auto !important;
+        overflow: visible !important;
+        float: none !important;
+        max-height: inherit !important;
+        line-height: inherit !important
+      }
+
+      tr.es-desk-hidden {
+        display: table-row !important
+      }
+
+      table.es-desk-hidden {
+        display: table !important
+      }
+
+      td.es-desk-menu-hidden {
+        display: table-cell !important
+      }
+
+      .es-menu td {
+        width: 1% !important
+      }
+
+      table.es-table-not-adapt,
+      .esd-block-html table {
+        width: auto !important
+      }
+
+      .h-auto {
+        height: auto !important
+      }
+    }
+
+    @media screen and (max-width:384px) {
+      .mail-message-content {
+        width: 414px !important
+      }
+    }
+  </style>
+</head>
+
+<body class="body"
+  style="width:100vw;height:100vh;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;padding:0;Margin:0">
   <p><a href="/" class="logout-link">Back</a></p>
-<style>
-  .logout-link {
-    display: inline-block;            /* Keep it on the same line */
-    position: absolute;               /* Position relative to the parent container */
-    top: 10px;                        /* Adjust vertical position */
-    right: 10px;                      /* Adjust horizontal position */
-    background: linear-gradient(145deg, #ff4d4d, #ff3333); /* Gradient background for a glossy effect */
-    color: white;                     /* White text color */
-    padding: 10px 20px;               /* Padding for the pill shape */
-    border-radius: 50px;              /* Makes it a pill-shaped button */
-    text-decoration: none;            /* Removes the underline */
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1), inset 2px 2px 5px rgba(255, 255, 255, 0.4); /* Glossy shadow */
-    font-weight: bold;                /* Bold text */
-    font-size: 16px;                  /* Text size */
-    font-family: 'Poppins', sans-serif;  /* Christmas-themed font */
-    transition: all 0.3s ease;        /* Smooth transition for hover effect */
-  }
-  
-  .logout-link:hover {
-    background: linear-gradient(145deg, #be3d3d, #ff4d4d);  /* Reverse the gradient on hover */
-    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2), inset 2px 2px 5px rgba(255, 255, 255, 0.5); /* Stronger shadow on hover */
-  }
-  
-  .logout-link:active {
-    background: linear-gradient(145deg, #ff2222, #ff3333);  /* Darker gradient on click */
-    box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.6); /* Subtle inner shadow for pressed effect */
-  }
-  
-</style>
+  <style>
+    .logout-link {
+      display: inline-block;
+      /* Keep it on the same line */
+      position: absolute;
+      /* Position relative to the parent container */
+      top: 10px;
+      /* Adjust vertical position */
+      right: 10px;
+      /* Adjust horizontal position */
+      background: linear-gradient(145deg, #ff4d4d, #ff3333);
+      /* Gradient background for a glossy effect */
+      color: white;
+      /* White text color */
+      padding: 10px 20px;
+      /* Padding for the pill shape */
+      border-radius: 50px;
+      /* Makes it a pill-shaped button */
+      text-decoration: none;
+      /* Removes the underline */
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1), inset 2px 2px 5px rgba(255, 255, 255, 0.4);
+      /* Glossy shadow */
+      font-weight: bold;
+      /* Bold text */
+      font-size: 16px;
+      /* Text size */
+      font-family: 'Poppins', sans-serif;
+      /* Christmas-themed font */
+      transition: all 0.3s ease;
+      /* Smooth transition for hover effect */
+    }
+
+    .logout-link:hover {
+      background: linear-gradient(145deg, #be3d3d, #ff4d4d);
+      /* Reverse the gradient on hover */
+      box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2), inset 2px 2px 5px rgba(255, 255, 255, 0.5);
+      /* Stronger shadow on hover */
+    }
+
+    .logout-link:active {
+      background: linear-gradient(145deg, #ff2222, #ff3333);
+      /* Darker gradient on click */
+      box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.6);
+      /* Subtle inner shadow for pressed effect */
+    }
+  </style>
   <div dir="ltr" class="es-wrapper-color" lang="en" style="background-color:#374769"><!--[if gte mso 9]>
 			<v:background xmlns:v="urn:schemas-microsoft-com:vml" fill="t">
 				<v:fill type="tile" src="https://tlr.stripocdn.email/content/guids/CABINET_d9e64e61bd5ab14658ef0c95d79249160dd08cb38b25b963906cfe6c64bad7ae/images/bgtemplate.png" color="#374769" origin="0.5, 0" position="0.5, 0"></v:fill>
 			</v:background>
 		<![endif]-->
-   <table width="100%"  cellspacing="0" cellpadding="0" background="https://erwoxlr.stripocdn.email/content/guids/CABINET_d9e64e61bd5ab14658ef0c95d79249160dd08cb38b25b963906cfe6c64bad7ae/images/bgtemplate.png" class="es-wrapper" role="none" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;width:100%;height:100vh;background-image:url(https://erwoxlr.stripocdn.email/content/guids/CABINET_d9e64e61bd5ab14658ef0c95d79249160dd08cb38b25b963906cfe6c64bad7ae/images/bgtemplate.png);background-repeat:no-repeat;background-position:center top;background-color:#374769">
-     <tr>
-      <td valign="top" class="es-m-margin" style="padding:0;Margin:0">
-       <table cellspacing="0" cellpadding="0" align="center" class="es-content" role="none" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;width:100%;table-layout:fixed !important">
-         <tr>
-          <td align="center" style="padding:0;Margin:0">
-           <table cellspacing="0" cellpadding="0" align="center" class="es-content-body" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:transparent;width:600px" role="none">
-             <tr>
-              <td align="left" data-custom-paddings="true" style="padding:0;Margin:0">
-               <table cellpadding="0" cellspacing="0" width="100%" role="none" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
-                 <tr>
-                  <td align="center" valign="top" style="padding:0;Margin:0;width:600px">
-                   <table cellpadding="0" cellspacing="0" width="100%" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
-                     <tr>
-                      <td align="center" height="112" style="padding:0;Margin:0"></td>
-                     </tr>
-                     <tr>
-                      <td align="center" style="padding:0;Margin:0;font-size:0px"><img src="https://erwoxlr.stripocdn.email/content/guids/CABINET_d9e64e61bd5ab14658ef0c95d79249160dd08cb38b25b963906cfe6c64bad7ae/images/2342343242x.png" alt="" width="600" class="adapt-img" style="display:block;font-size:15px;border:0;outline:none;text-decoration:none"></td>
-                     </tr>
-                   </table></td>
-                 </tr>
-               </table></td>
-             </tr>
-             <tr>
-                <td align="left" bgcolor="#fbf3ea" style="Margin:0;padding-top:20px;padding-right:20px;padding-bottom:80px;padding-left:20px;background-color:#fbf3ea" data-custom-paddings="true">
-                  <table cellpadding="0" cellspacing="0" width="100%" role="none" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
-                    <tr>
-                      <td align="center" valign="top" style="padding:0;Margin:0;width:560px">
-                        <table cellpadding="0" cellspacing="0" width="100%" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
-                          <tr>
-                            <td align="center" style="padding:0;Margin:0">
-                              <h1 class="es-m-txt-c" style="Margin:0;font-family:Changa, sans-serif;mso-line-height-rule:exactly;letter-spacing:0;font-size:55px;font-style:normal;font-weight:bold;line-height:55px;color:#E33650">Pick only one&nbsp;</h1>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td align="center" style="padding:0;Margin:0">
-                              <h2 class="es-m-txt-c" style="Margin:0;font-family:Changa, sans-serif;mso-line-height-rule:exactly;letter-spacing:0;font-size:35px;font-style:normal;font-weight:bold;line-height:38.5px;color:#E33650">Who might be your secret santa?</h2>
-                              <p class="es-m-txt-chat" style="Margin:0;font-family:Changa, sans-serif;mso-line-height-rule:exactly;letter-spacing:0;font-size:25px;font-style:normal;font-weight:bold;line-height:38.5px;color:#374769">You can submit only once!</p>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td align="center" style="padding:0;Margin:0;padding-top:10px;padding-bottom:10px;font-size:0px">
-                              <img src="https://erwoxlr.stripocdn.email/content/guids/CABINET_d9e64e61bd5ab14658ef0c95d79249160dd08cb38b25b963906cfe6c64bad7ae/images/star.png" alt="" width="54" style="display:block;font-size:15px;border:0;outline:none;text-decoration:none">
-                            </td>
-                          </tr>
-                          <!-- Selection and Display -->
-                          <tr>
-                              <td align="center" style="padding:0;Margin:0;padding-top:20px">
-                                  <div class="relative w-64">
-                                      <input type="text" id="nameSearch" placeholder="Search and select a name" class="p-2 border rounded-md w-full" autocomplete="off">
-                                      <!-- Dropdown for names -->
-                                      <ul id="nameList" class="absolute left-0 right-0 bg-white border mt-1 rounded-md shadow-lg max-h-60 overflow-y-auto hidden z-10">
-                                          <!-- Dynamically filled list will go here -->
-                                        </ul>
-                                    </div>
+    <table width="100%" cellspacing="0" cellpadding="0"
+      background="https://erwoxlr.stripocdn.email/content/guids/CABINET_d9e64e61bd5ab14658ef0c95d79249160dd08cb38b25b963906cfe6c64bad7ae/images/bgtemplate.png"
+      class="es-wrapper" role="none"
+      style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;width:100%;height:100vh;background-image:url(https://erwoxlr.stripocdn.email/content/guids/CABINET_d9e64e61bd5ab14658ef0c95d79249160dd08cb38b25b963906cfe6c64bad7ae/images/bgtemplate.png);background-repeat:no-repeat;background-position:center top;background-color:#374769">
+      <tr>
+        <td valign="top" class="es-m-margin" style="padding:0;Margin:0">
+          <table cellspacing="0" cellpadding="0" align="center" class="es-content" role="none"
+            style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;width:100%;table-layout:fixed !important">
+            <tr>
+              <td align="center" style="padding:0;Margin:0">
+                <table cellspacing="0" cellpadding="0" align="center" class="es-content-body"
+                  style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:transparent;width:600px"
+                  role="none">
+                  <tr>
+                    <td align="left" data-custom-paddings="true" style="padding:0;Margin:0">
+                      <table cellpadding="0" cellspacing="0" width="100%" role="none"
+                        style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                        <tr>
+                          <td align="center" valign="top" style="padding:0;Margin:0;width:600px">
+                            <table cellpadding="0" cellspacing="0" width="100%" role="presentation"
+                              style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                              <tr>
+                                <td align="center" height="112" style="padding:0;Margin:0"></td>
+                              </tr>
+                              <tr>
+                                <td align="center" style="padding:0;Margin:0;font-size:0px"><img
+                                    src="https://erwoxlr.stripocdn.email/content/guids/CABINET_d9e64e61bd5ab14658ef0c95d79249160dd08cb38b25b963906cfe6c64bad7ae/images/2342343242x.png"
+                                    alt="" width="600" class="adapt-img"
+                                    style="display:block;font-size:15px;border:0;outline:none;text-decoration:none">
                                 </td>
-                            </tr>
-                            
-                            <!-- Selected Names -->
-                            <tr>
-                              <td align="center" style="padding:0;Margin:0;padding-top:20px;display:flex;justify-content:center;">
-                                  <div id="selectedNames" class="flex gap-2">
-                                      <!-- Selected names will be shown here -->
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td align="left" bgcolor="#fbf3ea"
+                      style="Margin:0;padding-top:20px;padding-right:20px;padding-bottom:80px;padding-left:20px;background-color:#fbf3ea"
+                      data-custom-paddings="true">
+                      <table cellpadding="0" cellspacing="0" width="100%" role="none"
+                        style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                        <tr>
+                          <td align="center" valign="top" style="padding:0;Margin:0;width:560px">
+                            <table cellpadding="0" cellspacing="0" width="100%" role="presentation"
+                              style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                              <tr>
+                                <td align="center" style="padding:0;Margin:0">
+                                  <h1 class="es-m-txt-c"
+                                    style="Margin:0;font-family:Changa, sans-serif;mso-line-height-rule:exactly;letter-spacing:0;font-size:55px;font-style:normal;font-weight:bold;line-height:55px;color:#E33650">
+                                    Pick only one&nbsp;</h1>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td align="center" style="padding:0;Margin:0">
+                                  <h2 class="es-m-txt-c"
+                                    style="Margin:0;font-family:Changa, sans-serif;mso-line-height-rule:exactly;letter-spacing:0;font-size:35px;font-style:normal;font-weight:bold;line-height:38.5px;color:#E33650">
+                                    Who might be your secret santa?</h2>
+                                  <p class="es-m-txt-chat"
+                                    style="Margin:0;font-family:Changa, sans-serif;mso-line-height-rule:exactly;letter-spacing:0;font-size:25px;font-style:normal;font-weight:bold;line-height:38.5px;color:#374769">
+                                    You can submit only once!</p>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td align="center"
+                                  style="padding:0;Margin:0;padding-top:10px;padding-bottom:10px;font-size:0px">
+                                  <img
+                                    src="https://erwoxlr.stripocdn.email/content/guids/CABINET_d9e64e61bd5ab14658ef0c95d79249160dd08cb38b25b963906cfe6c64bad7ae/images/star.png"
+                                    alt="" width="54"
+                                    style="display:block;font-size:15px;border:0;outline:none;text-decoration:none">
+                                </td>
+                              </tr>
+                              <!-- Selection and Display -->
+                              <tr>
+                                <td align="center" style="padding:0;Margin:0;padding-top:20px">
+                                  <div class="relative w-64">
+                                    <input type="text" id="nameSearch" placeholder="Search and select a name"
+                                      class="p-2 border rounded-md w-full" autocomplete="off">
+                                    <!-- Dropdown for names -->
+                                    <ul id="nameList"
+                                      class="absolute left-0 right-0 bg-white border mt-1 rounded-md shadow-lg max-h-60 overflow-y-auto hidden z-10">
+                                      <!-- Dynamically filled list will go here -->
+                                    </ul>
                                   </div>
-                              </td>
-                          </tr>
-                          
-                            <tr>
-                              <td align="center" style="padding:0;Margin:0;padding-top:30px">
-                                <button id="you-sure" class="es-button" style="background:#E7A31F;border-radius:30px;font-family:Arial, sans-serif;font-weight:bold;font-size:14px;padding:14px 35px 14px 35px;color:#FFFFFF;text-decoration:none;border:none">
-                                  You sure ?
-                                </button>
-                              </td>
-                            </tr>
-              
-                        </table>
-                      </td>
-                    </tr>
-                  </table>
-                </td>
-              </tr>
-              
-              <script>
+                                </td>
+                              </tr>
 
-// Name list array
-const names = JSON.parse('{{.NamesJSON}}');
-let selectedNames;
+                              <!-- Selected Names -->
+                              <tr>
+                                <td align="center"
+                                  style="padding:0;Margin:0;padding-top:20px;display:flex;justify-content:center;">
+                                  <div id="selectedNames" class="flex gap-2">
+                                    <!-- Selected names will be shown here -->
+                                  </div>
+                                </td>
+                              </tr>
 
-const nameList = document.getElementById('nameList');
-const nameSearch = document.getElementById('nameSearch');
-const selectedNamesContainer = document.getElementById('selectedNames');
+                              <tr>
+                                <td align="center" style="padding:0;Margin:0;padding-top:30px">
+                                  <button id="you-sure" class="es-button"
+                                    style="background:#E7A31F;border-radius:30px;font-family:Arial, sans-serif;font-weight:bold;font-size:14px;padding:14px 35px 14px 35px;color:#FFFFFF;text-decoration:none;border:none">
+                                    You sure ?
+                                  </button>
+                                </td>
+                              </tr>
 
-// Function to display available names
-function displayNames() {
-  nameList.innerHTML = '';
-  const searchTerm = nameSearch.value.toLowerCase();
-  // Show the list if there is some input and names match, or if input is empty (show all names)
-  let filtered = names.filter(name => selectedNames !== name);
-  if (searchTerm) {
-    filtered = filtered.filter(name => name.toLowerCase().includes(searchTerm));
-  }
-  for(const name of filtered){
-        const listItem = document.createElement('li');
-        listItem.classList.add('cursor-pointer', 'p-2', 'hover:bg-gray-200', 'border-b');
-        listItem.textContent = name;
-        listItem.addEventListener('click', () => selectName(name));
-        nameList.appendChild(listItem);
-  }
+                            </table>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
 
-}
+                  <script>
 
-// Function to select a name
-function selectName(name) {
-  if (selectedNames !== name) {
-    selectedNames = name;
-    updateSelectedNames();
-    displayNames(); // Re-filter the list after selection
-  }
-  nameSearch.value = ''; // Clear the input after selection
-  nameList.classList.add('hidden'); // Hide list after selection
-}
+                    // Name list array
+                    const names = JSON.parse('{{.NamesJSON}}');
+                    let selectedNames;
 
-// Function to update selected names display
-function updateSelectedNames() {
-  selectedNamesContainer.innerHTML = '';
-    const nameItem = document.createElement('div');
-    nameItem.classList.add('flex', 'items-center', 'gap-2', 'bg-gray-200', 'p-2', 'rounded-md');
-    nameItem.innerHTML = `
+                    const nameList = document.getElementById('nameList');
+                    const nameSearch = document.getElementById('nameSearch');
+                    const selectedNamesContainer = document.getElementById('selectedNames');
+
+                    // Function to display available names
+                    function displayNames() {
+                      nameList.innerHTML = '';
+                      const searchTerm = nameSearch.value.toLowerCase();
+                      // Show the list if there is some input and names match, or if input is empty (show all names)
+                      let filtered = names.filter(name => selectedNames !== name);
+                      if (searchTerm) {
+                        filtered = filtered.filter(name => name.toLowerCase().includes(searchTerm));
+                      }
+                      for (const name of filtered) {
+                        const listItem = document.createElement('li');
+                        listItem.classList.add('cursor-pointer', 'p-2', 'hover:bg-gray-200', 'border-b');
+                        listItem.textContent = name;
+                        listItem.addEventListener('click', () => selectName(name));
+                        nameList.appendChild(listItem);
+                      }
+
+                    }
+
+                    // Function to select a name
+                    function selectName(name) {
+                      if (selectedNames !== name) {
+                        selectedNames = name;
+                        updateSelectedNames();
+                        displayNames(); // Re-filter the list after selection
+                      }
+                      nameSearch.value = ''; // Clear the input after selection
+                      nameList.classList.add('hidden'); // Hide list after selection
+                    }
+
+                    // Function to update selected names display
+                    function updateSelectedNames() {
+                      console.log(selectedNames)
+                      selectedNamesContainer.innerHTML = '';
+                      if (selectedNames !== undefined){
+                      const nameItem = document.createElement('div');
+                      nameItem.classList.add('flex', 'items-center', 'gap-2', 'bg-gray-200', 'p-2', 'rounded-md');
+                      nameItem.innerHTML = `
       <span>${selectedNames}</span>
       <button onclick="removeName('${name}')" class="text-red-500 hover:text-red-700">x</button>`;
-    selectedNamesContainer.appendChild(nameItem);
-}
+                      selectedNamesContainer.appendChild(nameItem);
+                      }
+                    }
 
-// Function to remove a name
-function removeName(name) {
-  selectedNames = selectedNames.filter(n => n !== name);
-  updateSelectedNames();
-  displayNames(); // Re-filter the list after removal
-}
+                    // Function to remove a name
+                    function removeName(name) {
+                      selectedNames = undefined;
+                      updateSelectedNames();
+                      displayNames(); // Re-filter the list after removal
+                    }
 
-nameSearch.addEventListener('focus', () => {
-  nameList.classList.remove('hidden');
-  displayNames(); // Show all names initially when the input is focused
-});
+                    nameSearch.addEventListener('focus', () => {
+                      nameList.classList.remove('hidden');
+                      displayNames(); // Show all names initially when the input is focused
+                    });
 
-nameSearch.addEventListener('keydown', (e) => {
-  if (e.key === "Escape") {  // Allow closing the dropdown using "Escape"
-    nameList.classList.add('hidden');
-  }
-});
+                    nameSearch.addEventListener('keydown', (e) => {
+                      if (e.key === "Escape") {  // Allow closing the dropdown using "Escape"
+                        nameList.classList.add('hidden');
+                      }
+                    });
 
-nameSearch.addEventListener('blur', () => {
-  setTimeout(() => {
-    if (!nameSearch.value) {
-      nameList.classList.add('hidden'); // Only hide if the input is empty
-    }
-  }, 100); // Timeout to allow click events on list items
-});
-// Event listener for name search
-nameSearch.addEventListener('input', displayNames);
+                    nameSearch.addEventListener('blur', () => {
+                      setTimeout(() => {
+                        if (!nameSearch.value) {
+                          nameList.classList.add('hidden'); // Only hide if the input is empty
+                        }
+                      }, 100); // Timeout to allow click events on list items
+                    });
+                    // Event listener for name search
+                    nameSearch.addEventListener('input', displayNames);
 
-function submitNamesToCSV() {
-  // Format the selected names in the desired format
-  const formattedNames = [`{{.UserName}}`, selectedNames,`{{.SantaName}}`];
+                    function submitNamesToCSV() {
+                      // Format the selected names in the desired format
+                      const formattedNames = [`{{.UserName}}`, selectedNames, `{{.SantaName}}`];
 
-  // Send the formatted names to the server for CSV generation
-  fetch('/submit-names', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ names: formattedNames })
-  })
-    .then(response => {
-      if (response.status === 409) {
-        return response.json().then(data => {
-          throw new Error(data.message); // Handle conflict case
-        });
-      }
-      if (!response.ok) {
-        throw new Error('Failed to save names.');
-      }
-      return response.json();
-    })
-    .then(data => {
-      alert('Your responses have been saved!');
-    })
-    .catch(error => {
-      if (error.message === 'You have already guessed!') {
-        alert('You have already guessed!');
-      } else {
-        console.error('Error:', error);
-        alert(error.message);
-      }
-    });
-}
+                      // Send the formatted names to the server for CSV generation
+                      fetch('/submit-names', {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ names: formattedNames })
+                      })
+                        .then(response => {
+                          if (response.status === 409) {
+                            return response.json().then(data => {
+                              throw new Error(data.message); // Handle conflict case
+                            });
+                          }
+                          if (!response.ok) {
+                            throw new Error('Failed to save names.');
+                          }
+                          return response.json();
+                        })
+                        .then(data => {
+                          alert('Your responses have been saved!');
+                        })
+                        .catch(error => {
+                          if (error.message === 'You have already guessed!') {
+                            alert('You have already guessed!');
+                          } else {
+                            console.error('Error:', error);
+                            alert(error.message);
+                          }
+                        });
+                    }
 
-// Initialize the name list
-displayNames();
+                    // Initialize the name list
+                    displayNames();
 
-// Attach event listener for CSV submission
-document.getElementById('you-sure').addEventListener('click', submitNamesToCSV);
+                    // Attach event listener for CSV submission
+                    document.getElementById('you-sure').addEventListener('click', submitNamesToCSV);
 
-              </script>        
-              
-           </table></td>
-         </tr>
-       </table>
-       
-       <table cellpadding="0" cellspacing="0" align="center" class="es-content" role="none" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;width:100%;table-layout:fixed !important">
-         <tr>
-          <td align="center" style="padding:0;Margin:0">
-           <table cellspacing="0" cellpadding="0" bgcolor="#c9dcff" align="center" class="es-content-body" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:transparent;width:600px" role="none">
-             <tr>
-              <td align="left" style="Margin:0;padding-right:20px;padding-left:20px;padding-top:30px;padding-bottom:30px;background-position:left top" data-custom-paddings="true">
-               <table width="100%" cellspacing="0" cellpadding="0" role="none" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
-                 <tr>
-                  <td valign="top" align="center" style="padding:0;Margin:0;width:560px">
-                   <table width="100%" cellspacing="0" cellpadding="0" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
-                     <tr>
-                     </tr>
-                   </table></td>
-                 </tr>
-               </table></td>
-             </tr>
-           </table></td>
-         </tr>
-       </table></td>
-     </tr>
-   </table>
+                  </script>
+
+                </table>
+              </td>
+            </tr>
+          </table>
+
+          <table cellpadding="0" cellspacing="0" align="center" class="es-content" role="none"
+            style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;width:100%;table-layout:fixed !important">
+            <tr>
+              <td align="center" style="padding:0;Margin:0">
+                <table cellspacing="0" cellpadding="0" bgcolor="#c9dcff" align="center" class="es-content-body"
+                  style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:transparent;width:600px"
+                  role="none">
+                  <tr>
+                    <td align="left"
+                      style="Margin:0;padding-right:20px;padding-left:20px;padding-top:30px;padding-bottom:30px;background-position:left top"
+                      data-custom-paddings="true">
+                      <table width="100%" cellspacing="0" cellpadding="0" role="none"
+                        style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                        <tr>
+                          <td valign="top" align="center" style="padding:0;Margin:0;width:560px">
+                            <table width="100%" cellspacing="0" cellpadding="0" role="presentation"
+                              style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                              <tr>
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
   </div>
 
-<style>
-  /* Custom styles to make SweetAlert responsive */
-  .swal-custom-popup {
-      font-size: 1rem; /* Adjust font size for better readability */
-      padding: 1.5rem; /* Adjust padding */
-      max-width: 90%; /* Restrict width on smaller screens */
-      word-wrap: break-word; /* Prevent long text overflow */
-  }
+  <style>
+    /* Custom styles to make SweetAlert responsive */
+    .swal-custom-popup {
+      font-size: 1rem;
+      /* Adjust font size for better readability */
+      padding: 1.5rem;
+      /* Adjust padding */
+      max-width: 90%;
+      /* Restrict width on smaller screens */
+      word-wrap: break-word;
+      /* Prevent long text overflow */
+    }
 
-  @media (max-width: 768px) {
+    @media (max-width: 768px) {
       .swal-custom-popup {
-          font-size: 0.9rem; /* Slightly smaller font size for mobile */
-          padding: 1rem;
+        font-size: 0.9rem;
+        /* Slightly smaller font size for mobile */
+        padding: 1rem;
       }
-  }
+    }
 
-  @media (max-width: 480px) {
+    @media (max-width: 480px) {
       .swal-custom-popup {
-          font-size: 0.8rem; /* Further adjustment for small screens */
+        font-size: 0.8rem;
+        /* Further adjustment for small screens */
       }
-  }
-</style>
- </body>
+    }
+  </style>
+</body>
+
 </html>
