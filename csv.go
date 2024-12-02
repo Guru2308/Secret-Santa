@@ -1,11 +1,15 @@
 package main
 
 import (
+	"context"
 	"encoding/csv"
 	"encoding/json"
 	"log"
 	"net/http"
 	"os"
+
+	"google.golang.org/api/option"
+	"google.golang.org/api/sheets/v4"
 )
 
 // Global variable to hold approved users
@@ -38,6 +42,12 @@ func LoadApprovedUsers(filePath string) error {
 	return nil
 }
 
+
+const (
+	spreadsheetID = "1mpiC5oUjGB6rJBDcIyjmkoVhwvnr_d73tUGwQP_LFZw" 
+	sheetName     = "Guessed_List"
+)
+
 func submitNamesHandler(w http.ResponseWriter, r *http.Request) {
 	var req NamesRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -46,37 +56,37 @@ func submitNamesHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Open the file for reading and appending
-	file, err := os.OpenFile("guessed_names.csv", os.O_APPEND|os.O_CREATE|os.O_RDWR, 0644)
-	if err != nil {
-		http.Error(w, "Unable to open CSV file", http.StatusInternalServerError)
-		return
-	}
-	defer file.Close()
-
-	// Read existing records to check for duplicates
-	existingRecords := make(map[string]bool)
-	reader := csv.NewReader(file)
-	for {
-		record, err := reader.Read()
-		if err != nil {
-			if err == csv.ErrFieldCount || err.Error() == "EOF" {
-				break
-			}
-			http.Error(w, "Error reading CSV file", http.StatusInternalServerError)
-			return
-		}
-		if len(record) > 0 {
-			existingRecords[record[0]] = true // Assuming username is in the first column
-		}
-	}
-
 	// Extract username from the first formatted name
 	if len(req.Names) != 3 {
-		http.Error(w, "Expected 3, got different", http.StatusBadRequest)
+		http.Error(w, "Expected 3 names, got different", http.StatusBadRequest)
 		return
 	}
 	username := req.Names[0]
+
+	// Authenticate and create the Sheets service
+	ctx := context.Background()
+	srv, err := sheets.NewService(ctx, option.WithCredentialsFile("credentials.json"))
+	if err != nil {
+		log.Printf("Unable to create Sheets service: %v", err)
+		http.Error(w, "Unable to access Google Sheets", http.StatusInternalServerError)
+		return
+	}
+
+	// Read existing records to check for duplicates
+	readRange := sheetName + "!A:A" 
+	resp, err := srv.Spreadsheets.Values.Get(spreadsheetID, readRange).Do()
+	if err != nil {
+		log.Printf("Unable to read from Google Sheets: %v", err)
+		http.Error(w, "Error reading Google Sheets", http.StatusInternalServerError)
+		return
+	}
+
+	existingRecords := make(map[string]bool)
+	for _, row := range resp.Values {
+		if len(row) > 0 {
+			existingRecords[row[0].(string)] = true
+		}
+	}
 
 	// Check if the username already exists
 	if existingRecords[username] {
@@ -86,12 +96,16 @@ func submitNamesHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Write the new record
-	writer := csv.NewWriter(file)
-	defer writer.Flush()
-	record := req.Names
-	if err := writer.Write(record); err != nil {
-		http.Error(w, "Unable to write to CSV file", http.StatusInternalServerError)
+	// Append the new record to the Google Sheet
+	writeRange := sheetName + "!A:C" 
+	_, err = srv.Spreadsheets.Values.Append(spreadsheetID, writeRange, &sheets.ValueRange{
+		Values: [][]interface{}{{
+			req.Names[0], req.Names[1], req.Names[2],
+		}},
+	}).ValueInputOption("RAW").Do()
+	if err != nil {
+		log.Printf("Unable to write to Google Sheets: %v", err)
+		http.Error(w, "Unable to write to Google Sheets", http.StatusInternalServerError)
 		return
 	}
 
