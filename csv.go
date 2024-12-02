@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strings"
 )
 
 // Global variable to hold approved users
@@ -42,6 +41,7 @@ func LoadApprovedUsers(filePath string) error {
 func submitNamesHandler(w http.ResponseWriter, r *http.Request) {
 	var req NamesRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		log.Println(err)
 		http.Error(w, "Invalid data", http.StatusBadRequest)
 		return
 	}
@@ -72,39 +72,27 @@ func submitNamesHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Extract username from the first formatted name
-	if len(req.Names) > 0 {
-		parts := strings.SplitN(req.Names[0], " -> ", 2)
-		if len(parts) != 2 {
-			http.Error(w, "Invalid name format", http.StatusBadRequest)
-			return
-		}
-		username := parts[0]
+	if len(req.Names) != 3 {
+		http.Error(w, "Expected 3, got different", http.StatusBadRequest)
+		return
+	}
+	username := req.Names[0]
 
-		// Check if the username already exists
-		if existingRecords[username] {
-			w.Header().Set("Content-Type", "application/json")
-			w.WriteHeader(http.StatusConflict) // HTTP 409 Conflict
-			json.NewEncoder(w).Encode(map[string]string{"message": "You have already guessed!"})
-			return
-		}
+	// Check if the username already exists
+	if existingRecords[username] {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusConflict) // HTTP 409 Conflict
+		json.NewEncoder(w).Encode(map[string]string{"message": "You have already guessed!"})
+		return
+	}
 
-		// Extract only the names
-		var names []string
-		for _, name := range req.Names {
-			parts := strings.SplitN(name, " -> ", 2)
-			if len(parts) == 2 {
-				names = append(names, strings.Trim(parts[1], "'"))
-			}
-		}
-
-		// Write the new record
-		writer := csv.NewWriter(file)
-		defer writer.Flush()
-		record := append([]string{username}, names...)
-		if err := writer.Write(record); err != nil {
-			http.Error(w, "Unable to write to CSV file", http.StatusInternalServerError)
-			return
-		}
+	// Write the new record
+	writer := csv.NewWriter(file)
+	defer writer.Flush()
+	record := req.Names
+	if err := writer.Write(record); err != nil {
+		http.Error(w, "Unable to write to CSV file", http.StatusInternalServerError)
+		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
