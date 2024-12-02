@@ -556,9 +556,8 @@
                       const searchTerm = nameSearch.value.toLowerCase();
                       // Show the list if there is some input and names match, or if input is empty (show all names)
                       let filtered = names.filter(name => selectedNames !== name);
-                      if (searchTerm) {
-                        filtered = filtered.filter(name => name.toLowerCase().includes(searchTerm));
-                      }
+                      
+                      filtered = filtered.filter(name => name.toLowerCase().includes(searchTerm));
                       for (const name of filtered) {
                         const listItem = document.createElement('li');
                         listItem.classList.add('cursor-pointer', 'p-2', 'hover:bg-gray-200', 'border-b');
