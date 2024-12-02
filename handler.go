@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/csv"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -357,57 +356,6 @@ func getPairedUserEmail(currentUserID uint, role string) (string, error) {
 
 	// Return the paired user's email
 	return pairedUser.Email, nil
-}
-
-func PopulateUsersFromCSV(db *gorm.DB, csvPath, defaultPassword string) error {
-	// Open the CSV file
-	file, err := os.Open(csvPath)
-	if err != nil {
-		return fmt.Errorf("failed to open CSV file: %w", err)
-	}
-	defer file.Close()
-
-	// Read CSV data
-	reader := csv.NewReader(file)
-	records, err := reader.ReadAll()
-	if err != nil {
-		return fmt.Errorf("failed to read CSV data: %w", err)
-	}
-
-	// Insert users into the database
-	for i, record := range records {
-
-		if i == 0 {
-			continue
-		}
-		if len(record) == 0 {
-			continue
-		}
-
-		email := record[0]
-		user := RegisteredUser{
-			Email:    email,
-			Password: defaultPassword,
-		}
-
-		// Check if user already exists based on email
-		var existingUser RegisteredUser
-		if err := db.Where("email = ?", email).First(&existingUser).Error; err != nil {
-			if err.Error() != "record not found" {
-				log.Printf("Error checking if user exists for email %s: %v", email, err)
-				continue
-			}
-			// User does not exist, insert a new one
-			if err := db.Create(&user).Error; err != nil {
-				log.Printf("Failed to insert user with email %s: %v", email, err)
-			}
-		} else {
-			// User already exists, skip insertion
-			log.Printf("User with email %s already exists. Skipping insertion.", email)
-		}
-	}
-
-	return nil
 }
 
 func capitalizeWordsImproved(input string) string {
