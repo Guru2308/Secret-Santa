@@ -609,45 +609,51 @@
                         nameList.classList.add('hidden');
                       }
                     });
-                    
+
                     // Event listener for name search
                     nameSearch.addEventListener('input', displayNames);
 
                     function submitNamesToCSV() {
-                      // Format the selected names in the desired format
-                      const formattedNames = [`{{.UserName}}`, selectedNames, `{{.SantaName}}`];
+  // Check if selectedNames is empty
+  if (!selectedNames || selectedNames.length === 0) {
+    alert('Please select at least one name before submitting.');
+    return; // Exit the function early
+  }
 
-                      // Send the formatted names to the server for CSV generation
-                      fetch('/submit-names', {
-                        method: 'POST',
-                        headers: {
-                          'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ names: formattedNames })
-                      })
-                        .then(response => {
-                          if (response.status === 409) {
-                            return response.json().then(data => {
-                              throw new Error(data.message); // Handle conflict case
-                            });
-                          }
-                          if (!response.ok) {
-                            throw new Error('Failed to save names.');
-                          }
-                          return response.json();
-                        })
-                        .then(data => {
-                          alert('Your responses have been saved!');
-                        })
-                        .catch(error => {
-                          if (error.message === 'You have already guessed!') {
-                            alert('You have already guessed!');
-                          } else {
-                            console.error('Error:', error);
-                            alert(error.message);
-                          }
-                        });
-                    }
+  // Format the selected names in the desired format
+  const formattedNames = [`{{.UserName}}`, selectedNames, `{{.SantaName}}`];
+
+  // Send the formatted names to the server for CSV generation
+  fetch('/submit-names', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ names: formattedNames })
+  })
+    .then(response => {
+      if (response.status === 409) {
+        return response.json().then(data => {
+          throw new Error(data.message); // Handle conflict case
+        });
+      }
+      if (!response.ok) {
+        throw new Error('Failed to save names.');
+      }
+      return response.json();
+    })
+    .then(data => {
+      alert('Your responses have been saved!');
+    })
+    .catch(error => {
+      if (error.message === 'You have already guessed!') {
+        alert('You have already guessed!');
+      } else {
+        console.error('Error:', error);
+        alert(error.message);
+      }
+    });
+}
 
                     // Initialize the name list
                     displayNames();
