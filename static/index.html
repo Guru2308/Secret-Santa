@@ -288,6 +288,7 @@ a[x-apple-data-detectors],
         <u><i><a href="/guess">Try guessing your santa !</a></i></u>
       </form>
       
+      
       <!-- Close button -->
       <button id="closeModalButton" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-xl">
         &times;
@@ -310,8 +311,8 @@ a[x-apple-data-detectors],
     
   </style>
   
-<script>
-
+  <script>
+    // Show modal when open button is clicked
     document.getElementById('openModalButton').addEventListener('click', function() {
       document.getElementById('modal').classList.remove('hidden');
     });
@@ -323,18 +324,36 @@ a[x-apple-data-detectors],
   
     // Handle form submission
     document.getElementById('messageForm').addEventListener('submit', function(event) {
+      // Get the trimmed message value
+      const message = document.getElementById('message').value.trim();
   
-      // Simulate form submission (optional, depending on your setup)
-      setTimeout(() => {
+      // Check if the message is empty or contains only spaces
+      if (message === '') {
+        // Show an alert if the message is invalid
+        alert('Please enter a valid message.');
+        event.preventDefault(); // Prevent form submission
+      } else {
+        // If the message is valid, prevent the default form submission to show SweetAlert
+        event.preventDefault();
+  
+        // Show SweetAlert
         Swal.fire({
           title: 'Success!',
           text: 'Secret message sent successfully!',
           icon: 'success',
           confirmButtonText: 'OK'
+        }).then((result) => {
+          // After SweetAlert is closed, submit the form
+          if (result.isConfirmed) {
+            // Submit the form manually after the alert is closed
+            document.getElementById('messageForm').submit();
+          }
         });
-      }, 500);
+      }
     });
-</script>
+  </script>
+  
+  
 
 <style>
   /* Custom styles to make SweetAlert responsive */
