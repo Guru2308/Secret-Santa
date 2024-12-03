@@ -319,8 +319,15 @@ a[x-apple-data-detectors],
   
     // Close modal when close button is clicked
     document.getElementById('closeModalButton').addEventListener('click', function() {
-      document.getElementById('modal').classList.add('hidden');
+    // Hide the modal
+    document.getElementById('modal').classList.add('hidden');
+    
+    // Clear the text inputs inside the modal
+    const modalInputs = document.querySelectorAll('#modal input, #modal textarea');
+    modalInputs.forEach(input => {
+      input.value = ''; // Clear the value of each input or textarea
     });
+  });
   
     // Handle form submission
     document.getElementById('messageForm').addEventListener('submit', function(event) {
