@@ -543,21 +543,21 @@
                   <script>
 
                     // Name list array
-                    let isMouseDownOnList = false;
+                    const names = JSON.parse('{{.NamesJSON}}');
+                    let selectedNames;
 
-                    // Event listener to detect mousedown on the name list
-                    nameList.addEventListener('mousedown', () => {
-                      isMouseDownOnList = true;
-                    });
+                    const nameList = document.getElementById('nameList');
+                    const nameSearch = document.getElementById('nameSearch');
+                    const selectedNamesContainer = document.getElementById('selectedNames');
 
                     // Function to display available names
                     function displayNames() {
                       nameList.innerHTML = '';
                       const searchTerm = nameSearch.value.toLowerCase();
-
+                      // Show the list if there is some input and names match, or if input is empty (show all names)
                       let filtered = names.filter(name => selectedNames !== name);
+                      
                       filtered = filtered.filter(name => name.toLowerCase().includes(searchTerm));
-
                       for (const name of filtered) {
                         const listItem = document.createElement('li');
                         listItem.classList.add('cursor-pointer', 'p-2', 'hover:bg-gray-200', 'border-b');
@@ -566,8 +566,6 @@
                         nameList.appendChild(listItem);
                       }
 
-                      // Show the dropdown if there are results or the input is not empty
-                      nameList.classList.toggle('hidden', filtered.length === 0 && searchTerm === '');
                     }
 
                     // Function to select a name
@@ -575,22 +573,22 @@
                       if (selectedNames !== name) {
                         selectedNames = name;
                         updateSelectedNames();
-                        nameSearch.value = ''; // Clear the input after selection
-                        nameList.classList.add('hidden'); // Hide list after selection
                         displayNames(); // Re-filter the list after selection
                       }
+                      nameSearch.value = ''; // Clear the input after selection
+                      nameList.classList.add('hidden'); // Hide list after selection
                     }
 
                     // Function to update selected names display
                     function updateSelectedNames() {
                       selectedNamesContainer.innerHTML = '';
-                      if (selectedNames !== undefined) {
-                        const nameItem = document.createElement('div');
-                        nameItem.classList.add('flex', 'items-center', 'gap-2', 'bg-gray-200', 'p-2', 'rounded-md');
-                        nameItem.innerHTML = `
+                      if (selectedNames !== undefined){
+                      const nameItem = document.createElement('div');
+                      nameItem.classList.add('flex', 'items-center', 'gap-2', 'bg-gray-200', 'p-2', 'rounded-md');
+                      nameItem.innerHTML = `
       <span>${selectedNames}</span>
-      <button onclick="removeName('${selectedNames}')" class="text-red-500 hover:text-red-700">x</button>`;
-                        selectedNamesContainer.appendChild(nameItem);
+      <button onclick="removeName('${name}')" class="text-red-500 hover:text-red-700">x</button>`;
+                      selectedNamesContainer.appendChild(nameItem);
                       }
                     }
 
@@ -601,28 +599,61 @@
                       displayNames(); // Re-filter the list after removal
                     }
 
-                    // Event listeners for input focus, blur, and input
                     nameSearch.addEventListener('focus', () => {
                       nameList.classList.remove('hidden');
-                      displayNames(); // Show names when input is focused
+                      displayNames(); // Show all names initially when the input is focused
                     });
 
+                    nameSearch.addEventListener('keydown', (e) => {
+                      if (e.key === "Escape") {  // Allow closing the dropdown using "Escape"
+                        nameList.classList.add('hidden');
+                      }
+                    });
+                    
+                    // Event listener for name search
                     nameSearch.addEventListener('input', displayNames);
 
-                    // Prevent hiding the dropdown when clicking inside the list
-                    nameSearch.addEventListener('blur', () => {
-                      setTimeout(() => {
-                        if (!isMouseDownOnList) {
-                          nameList.classList.add('hidden'); // Only hide if no click inside the list
-                        }
-                        isMouseDownOnList = false; // Reset the flag after blur
-                      }, 100); // Timeout to allow click events on list items
-                    });
+                    function submitNamesToCSV() {
+                      // Format the selected names in the desired format
+                      const formattedNames = [`{{.UserName}}`, selectedNames, `{{.SantaName}}`];
 
-                    // Reset the flag after mouseup
-                    nameList.addEventListener('mouseup', () => {
-                      isMouseDownOnList = false;
-                    });
+                      // Send the formatted names to the server for CSV generation
+                      fetch('/submit-names', {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ names: formattedNames })
+                      })
+                        .then(response => {
+                          if (response.status === 409) {
+                            return response.json().then(data => {
+                              throw new Error(data.message); // Handle conflict case
+                            });
+                          }
+                          if (!response.ok) {
+                            throw new Error('Failed to save names.');
+                          }
+                          return response.json();
+                        })
+                        .then(data => {
+                          alert('Your responses have been saved!');
+                        })
+                        .catch(error => {
+                          if (error.message === 'You have already guessed!') {
+                            alert('You have already guessed!');
+                          } else {
+                            console.error('Error:', error);
+                            alert(error.message);
+                          }
+                        });
+                    }
+
+                    // Initialize the name list
+                    displayNames();
+
+                    // Attach event listener for CSV submission
+                    document.getElementById('you-sure').addEventListener('click', submitNamesToCSV);
 
                   </script>
 
