@@ -554,10 +554,10 @@
                     function displayNames() {
                       nameList.innerHTML = '';
                       const searchTerm = nameSearch.value.toLowerCase();
-                      // Show the list if there is some input and names match, or if input is empty (show all names)
-                      let filtered = names.filter(name => selectedNames !== name);
 
+                      let filtered = names.filter(name => selectedNames !== name);
                       filtered = filtered.filter(name => name.toLowerCase().includes(searchTerm));
+
                       for (const name of filtered) {
                         const listItem = document.createElement('li');
                         listItem.classList.add('cursor-pointer', 'p-2', 'hover:bg-gray-200', 'border-b');
@@ -565,6 +565,9 @@
                         listItem.addEventListener('click', () => selectName(name));
                         nameList.appendChild(listItem);
                       }
+
+                      // Show the dropdown if there are results or the input is not empty
+                      nameList.classList.toggle('hidden', filtered.length === 0 && searchTerm === '');
                     }
 
                     // Function to select a name
@@ -572,10 +575,10 @@
                       if (selectedNames !== name) {
                         selectedNames = name;
                         updateSelectedNames();
+                        nameSearch.value = ''; // Clear the input after selection
+                        nameList.classList.add('hidden'); // Hide list after selection
                         displayNames(); // Re-filter the list after selection
                       }
-                      nameSearch.value = ''; // Clear the input after selection
-                      nameList.classList.add('hidden'); // Hide list after selection
                     }
 
                     // Function to update selected names display
@@ -598,31 +601,28 @@
                       displayNames(); // Re-filter the list after removal
                     }
 
-                    // Show names when input is focused
+                    // Event listeners for input focus, blur, and input
                     nameSearch.addEventListener('focus', () => {
                       nameList.classList.remove('hidden');
-                      displayNames(); // Show all names initially when the input is focused
+                      displayNames(); // Show names when input is focused
                     });
 
-                    // Allow closing the dropdown using "Escape"
-                    nameSearch.addEventListener('keydown', (e) => {
-                      if (e.key === "Escape") {
-                        nameList.classList.add('hidden');
-                      }
-                    });
+                    nameSearch.addEventListener('input', displayNames);
 
-                    // Prevent hiding the list when clicking inside it
+                    // Prevent hiding the dropdown when clicking inside the list
                     nameSearch.addEventListener('blur', () => {
                       setTimeout(() => {
                         if (!isMouseDownOnList) {
-                          nameList.classList.add('hidden'); // Only hide if the input is empty and no click inside the list
+                          nameList.classList.add('hidden'); // Only hide if no click inside the list
                         }
                         isMouseDownOnList = false; // Reset the flag after blur
                       }, 100); // Timeout to allow click events on list items
                     });
 
-                    // Event listener for name search
-                    nameSearch.addEventListener('input', displayNames);
+                    // Reset the flag after mouseup
+                    nameList.addEventListener('mouseup', () => {
+                      isMouseDownOnList = false;
+                    });
 
                   </script>
 
