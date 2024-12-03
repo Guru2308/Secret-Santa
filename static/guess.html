@@ -541,15 +541,14 @@
                   </tr>
 
                   <script>
-
                     // Name list array
                     const names = JSON.parse('{{.NamesJSON}}');
                     let selectedNames;
-
+                  
                     const nameList = document.getElementById('nameList');
                     const nameSearch = document.getElementById('nameSearch');
                     const selectedNamesContainer = document.getElementById('selectedNames');
-
+                  
                     // Function to display available names
                     function displayNames() {
                       nameList.innerHTML = '';
@@ -565,9 +564,8 @@
                         listItem.addEventListener('click', () => selectName(name));
                         nameList.appendChild(listItem);
                       }
-
                     }
-
+                  
                     // Function to select a name
                     function selectName(name) {
                       if (selectedNames !== name) {
@@ -578,90 +576,101 @@
                       nameSearch.value = ''; // Clear the input after selection
                       nameList.classList.add('hidden'); // Hide list after selection
                     }
-
+                  
                     // Function to update selected names display
                     function updateSelectedNames() {
                       selectedNamesContainer.innerHTML = '';
-                      if (selectedNames !== undefined){
-                      const nameItem = document.createElement('div');
-                      nameItem.classList.add('flex', 'items-center', 'gap-2', 'bg-gray-200', 'p-2', 'rounded-md');
-                      nameItem.innerHTML = `
-      <span>${selectedNames}</span>
-      <button onclick="removeName('${name}')" class="text-red-500 hover:text-red-700">x</button>`;
-                      selectedNamesContainer.appendChild(nameItem);
+                      if (selectedNames !== undefined) {
+                        const nameItem = document.createElement('div');
+                        nameItem.classList.add('flex', 'items-center', 'gap-2', 'bg-gray-200', 'p-2', 'rounded-md');
+                        nameItem.innerHTML = `
+                          <span>${selectedNames}</span>
+                          <button onclick="removeName('${selectedNames}')" class="text-red-500 hover:text-red-700">x</button>`;
+                        selectedNamesContainer.appendChild(nameItem);
                       }
                     }
-
+                  
                     // Function to remove a name
                     function removeName(name) {
                       selectedNames = undefined;
                       updateSelectedNames();
                       displayNames(); // Re-filter the list after removal
                     }
-
+                  
+                    // Close the dropdown when clicking outside of it
+                    document.addEventListener('click', function(event) {
+                      const isClickInside = nameSearch.contains(event.target) || nameList.contains(event.target);
+                      if (!isClickInside) {
+                        nameList.classList.add('hidden'); // Hide the dropdown when clicking outside
+                      }
+                    });
+                  
+                    // Event listener for name search input
                     nameSearch.addEventListener('focus', () => {
                       nameList.classList.remove('hidden');
                       displayNames(); // Show all names initially when the input is focused
                     });
-
+                  
+                    // Close dropdown on "Escape"
                     nameSearch.addEventListener('keydown', (e) => {
-                      if (e.key === "Escape") {  // Allow closing the dropdown using "Escape"
+                      if (e.key === "Escape") { // Allow closing the dropdown using "Escape"
                         nameList.classList.add('hidden');
                       }
                     });
-
-                    // Event listener for name search
+                  
+                    // Event listener for name search input
                     nameSearch.addEventListener('input', displayNames);
-
+                  
+                    // Function to submit names to CSV
                     function submitNamesToCSV() {
-  // Check if selectedNames is empty
-  if (!selectedNames || selectedNames.length === 0) {
-    alert('Please select at least one name before submitting.');
-    return; // Exit the function early
-  }
-
-  // Format the selected names in the desired format
-  const formattedNames = [`{{.UserName}}`, selectedNames, `{{.SantaName}}`];
-
-  // Send the formatted names to the server for CSV generation
-  fetch('/submit-names', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ names: formattedNames })
-  })
-    .then(response => {
-      if (response.status === 409) {
-        return response.json().then(data => {
-          throw new Error(data.message); // Handle conflict case
-        });
-      }
-      if (!response.ok) {
-        throw new Error('Failed to save names.');
-      }
-      return response.json();
-    })
-    .then(data => {
-      alert('Your responses have been saved!');
-    })
-    .catch(error => {
-      if (error.message === 'You have already guessed!') {
-        alert('You have already guessed!');
-      } else {
-        console.error('Error:', error);
-        alert(error.message);
-      }
-    });
-}
-
+                      // Check if selectedNames is empty
+                      if (!selectedNames || selectedNames.length === 0) {
+                        alert('Please select at least one name before submitting.');
+                        return; // Exit the function early
+                      }
+                  
+                      // Format the selected names in the desired format
+                      const formattedNames = [`{{.UserName}}`, selectedNames, `{{.SantaName}}`];
+                  
+                      // Send the formatted names to the server for CSV generation
+                      fetch('/submit-names', {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ names: formattedNames })
+                      })
+                      .then(response => {
+                        if (response.status === 409) {
+                          return response.json().then(data => {
+                            throw new Error(data.message); // Handle conflict case
+                          });
+                        }
+                        if (!response.ok) {
+                          throw new Error('Failed to save names.');
+                        }
+                        return response.json();
+                      })
+                      .then(data => {
+                        alert('Your responses have been saved!');
+                      })
+                      .catch(error => {
+                        if (error.message === 'You have already guessed!') {
+                          alert('You have already guessed!');
+                        } else {
+                          console.error('Error:', error);
+                          alert(error.message);
+                        }
+                      });
+                    }
+                  
                     // Initialize the name list
                     displayNames();
-
+                  
                     // Attach event listener for CSV submission
                     document.getElementById('you-sure').addEventListener('click', submitNamesToCSV);
-
                   </script>
+                  
 
                 </table>
               </td>
