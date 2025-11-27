@@ -197,6 +197,10 @@ func SecretMessageHandler(w http.ResponseWriter, r *http.Request) {
 
 // Function to send email using SMTP
 func sendEmail(email string, password string, from string, to string, body string) error {
+	// Strip spaces from password (common with App Passwords)
+	password = strings.ReplaceAll(password, " ", "")
+
+	log.Printf("Connecting to SMTP server %s:%s...", smtpServer, smtpPort)
 	auth := smtp.PlainAuth("", email, password, smtpServer)
 
 	// Format the email message
@@ -205,8 +209,9 @@ func sendEmail(email string, password string, from string, to string, body strin
 	// Send the email
 	err := smtp.SendMail(smtpServer+":"+smtpPort, auth, email, []string{to}, msg)
 	if err != nil {
-		log.Println("Error sending email:", err)
+		log.Printf("❌ Error sending email to %s: %v", to, err)
 		return err
 	}
+	log.Printf("✅ Email sent successfully to %s", to)
 	return nil
 }
