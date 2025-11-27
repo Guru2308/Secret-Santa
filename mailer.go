@@ -2,13 +2,14 @@ package main
 
 import (
 	"bytes"
+	"crypto/tls"
 	"fmt"
 	"html/template"
 	"log"
 	"net/http"
 	"net/smtp"
 	"os"
-  "strings"
+	"strings"
 )
 
 var smtpServer = "smtp.gmail.com"
@@ -201,18 +202,100 @@ func sendEmail(email string, password string, from string, to string, body strin
 	// Strip spaces from password (common with App Passwords)
 	password = strings.ReplaceAll(password, " ", "")
 
-	log.Printf("Connecting to SMTP server %s:%s...", smtpServer, smtpPort)
-	auth := smtp.PlainAuth("", email, password, smtpServer)
+	// Try Port 587 (STARTTLS) first
+	err := sendEmailViaPort(email, password, from, to, body, "587")
+	if err == nil {
+		return nil
+	}
 
-	// Format the email message
-	msg := []byte(fmt.Sprintf("From: %s\nTo: %s\n%s", from, to, body))
+	log.Printf("⚠️ Port 587 failed: %v. Retrying with Port 465 (SMTPS)...", err)
 
-	// Send the email
-	err := smtp.SendMail(smtpServer+":"+smtpPort, auth, email, []string{to}, msg)
+	// Fallback to Port 465 (Implicit TLS)
+	err = sendEmailViaPort(email, password, from, to, body, "465")
 	if err != nil {
-		log.Printf("❌ Error sending email to %s: %v", to, err)
+		log.Printf("❌ All attempts failed. Last error: %v", err)
 		return err
 	}
-	log.Printf("✅ Email sent successfully to %s", to)
+
+	return nil
+}
+
+func sendEmailViaPort(email string, password string, from string, to string, body string, port string) error {
+	addr := smtpServer + ":" + port
+	log.Printf("DEBUG: Dialing SMTP server %s...", addr)
+
+	var c *smtp.Client
+	var err error
+
+	if port == "465" {
+		// Implicit TLS for Port 465
+		tlsConfig := &tls.Config{ServerName: smtpServer}
+		conn, err := tls.Dial("tcp", addr, tlsConfig)
+		if err != nil {
+			return fmt.Errorf("TLS dial failed: %w", err)
+		}
+		c, err = smtp.NewClient(conn, smtpServer)
+		if err != nil {
+			return fmt.Errorf("SMTP client creation failed: %w", err)
+		}
+	} else {
+		// Plain TCP for Port 587
+		c, err = smtp.Dial(addr)
+		if err != nil {
+			return fmt.Errorf("dial failed: %w", err)
+		}
+	}
+	defer c.Close()
+
+	// Send EHLO
+	if err = c.Hello("localhost"); err != nil {
+		return fmt.Errorf("EHLO failed: %w", err)
+	}
+
+	// StartTLS for Port 587
+	if port == "587" {
+		if ok, _ := c.Extension("STARTTLS"); ok {
+			config := &tls.Config{ServerName: smtpServer}
+			if err = c.StartTLS(config); err != nil {
+				return fmt.Errorf("StartTLS failed: %w", err)
+			}
+		}
+	}
+
+	// Authenticate
+	auth := smtp.PlainAuth("", email, password, smtpServer)
+	if err = c.Auth(auth); err != nil {
+		return fmt.Errorf("authentication failed: %w", err)
+	}
+
+	// Set Sender
+	if err = c.Mail(email); err != nil {
+		return fmt.Errorf("MAIL command failed: %w", err)
+	}
+
+	// Set Recipient
+	if err = c.Rcpt(to); err != nil {
+		return fmt.Errorf("RCPT command failed: %w", err)
+	}
+
+	// Send Data
+	w, err := c.Data()
+	if err != nil {
+		return fmt.Errorf("DATA command failed: %w", err)
+	}
+
+	msg := []byte(fmt.Sprintf("From: %s\nTo: %s\n%s", from, to, body))
+	_, err = w.Write(msg)
+	if err != nil {
+		return fmt.Errorf("write failed: %w", err)
+	}
+
+	err = w.Close()
+	if err != nil {
+		return fmt.Errorf("close failed: %w", err)
+	}
+
+	c.Quit()
+	log.Printf("✅ Email sent successfully to %s via port %s", to, port)
 	return nil
 }
