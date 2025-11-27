@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/smtp"
 	"os"
+  "strings"
 )
 
 var smtpServer = "smtp.gmail.com"
