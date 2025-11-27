@@ -320,11 +320,13 @@ func GoogleCallback(w http.ResponseWriter, r *http.Request) {
 		Name:     "session_token",
 		Value:    sessionToken,
 		Path:     "/",
-		HttpOnly: true,                           // Prevents XSS attacks
-		Secure:   true,                           // Requires HTTPS
-		SameSite: http.SameSiteStrictMode,        // Prevents CSRF attacks
-		MaxAge:   24 * 60 * 60,                   // 24 hours
+		HttpOnly: true,                                              // Prevents XSS attacks
+		Secure:   os.Getenv("ENVIRONMENT") != "development",         // Requires HTTPS in production only
+		SameSite: http.SameSiteLaxMode,                              // Lax allows OAuth redirects, still prevents CSRF
+		MaxAge:   24 * 60 * 60,                                      // 24 hours
 	})
+
+	log.Printf("✅ Session cookie set for user: %s (Secure=%v)", email, os.Getenv("ENVIRONMENT") != "development")
 
 	// Redirect to the homepage
 	http.Redirect(w, r, "/", http.StatusSeeOther)

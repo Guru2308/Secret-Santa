@@ -10,7 +10,6 @@ type UserConnection struct {
 	ID      uint `gorm:"primaryKey"`
 	UserID  uint `gorm:"uniqueIndex"`
 	SantaID uint `gorm:"not null"` // The user this user is gifting to
-	ChildID uint `gorm:"not null"` // The user this user is receiving a gift from
 }
 
 type NamesRequest struct {

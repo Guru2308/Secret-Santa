@@ -329,29 +329,38 @@ func fetchNamesFromCSV(filePath, currentUserEmail string) ([]string, error) {
 
 // Function to get paired user details (email) based on role
 func getPairedUserEmail(currentUserID uint, role string) (string, error) {
-	var connection UserConnection
 	var pairedUser RegisteredUser
 
-	// Fetch the user's connections
-	err := DB.First(&connection, "user_id = ?", currentUserID).Error
-	if err != nil {
-		return "", fmt.Errorf("no connections found for user with ID %d: %v", currentUserID, err)
-	}
-
-	var pairedUserID uint
-	// Determine paired user based on the role ("santa" or "child")
 	if role == "santa" {
-		pairedUserID = connection.SantaID
+		// Find who this user gives to (direct lookup)
+		var connection UserConnection
+		err := DB.First(&connection, "user_id = ?", currentUserID).Error
+		if err != nil {
+			return "", fmt.Errorf("no connections found for user with ID %d: %w", currentUserID, err)
+		}
+
+		// Fetch the recipient's email
+		err = DB.First(&pairedUser, "id = ?", connection.SantaID).Error
+		if err != nil {
+			return "", fmt.Errorf("could not find recipient with ID %d: %w", connection.SantaID, err)
+		}
+
 	} else if role == "child" {
-		pairedUserID = connection.ChildID
+		// Find who gives to this user (reverse lookup: who has this user as their santa_id)
+		var gifterConnection UserConnection
+		err := DB.First(&gifterConnection, "santa_id = ?", currentUserID).Error
+		if err != nil {
+			return "", fmt.Errorf("no gifter found for user with ID %d: %w", currentUserID, err)
+		}
+
+		// Fetch the gifter's email
+		err = DB.First(&pairedUser, "id = ?", gifterConnection.UserID).Error
+		if err != nil {
+			return "", fmt.Errorf("could not find gifter with ID %d: %w", gifterConnection.UserID, err)
+		}
+
 	} else {
 		return "", fmt.Errorf("invalid role: %s. Use 'santa' or 'child'", role)
-	}
-
-	// Fetch the paired user's email
-	err = DB.First(&pairedUser, "id = ?", pairedUserID).Error
-	if err != nil {
-		return "", fmt.Errorf("could not find paired user with ID %d: %v", pairedUserID, err)
 	}
 
 	// Return the paired user's email

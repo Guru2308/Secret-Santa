@@ -1,6 +1,7 @@
 .git
 .gitignore
-.env
 *.md
 Dockerfile
 .dockerignore
+# Note: .env is intentionally NOT excluded so the app can load it inside the container
+# WARNING: Do not push this Docker image to public registries as it contains secrets
